@@ -1,6 +1,6 @@
 #include "button.h"
 
-void button_init(struct Button* button, GPIO* gpio, uint32_t pin)
+void button_init(struct Button* button, GPIO gpio, uint32_t pin)
 {
     button->gpio = gpio;
     button->pin = pin;
@@ -9,7 +9,7 @@ void button_init(struct Button* button, GPIO* gpio, uint32_t pin)
     button->callback = NULL;
 }
 
-void button_set_callback(struct Button* button, void (*callback)(bool, void*), void* arg)
+void button_set_callback(struct Button* button, void (*callback)(bool, struct Button*, void*), void* arg)
 {
     button->callback = callback;
     button->arg = arg;
@@ -30,7 +30,7 @@ void button_update(struct Button* button)
         button->state++;
         if(!button->state) {
             button->state = BUTTON_GIST_VALUE;
-            if(button->callback) button->callback(true, button->arg);
+            if(button->callback) button->callback(true, button, button->arg);
         };
     }
     else
@@ -38,6 +38,6 @@ void button_update(struct Button* button)
         if(button->state == -BUTTON_GIST_VALUE) return;
         button->state--;
         if(!button->state) button->state = -BUTTON_GIST_VALUE;
-            if(button->callback) button->callback(false, button->arg);
+            if(button->callback) button->callback(false, button, button->arg);
     }
 }

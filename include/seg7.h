@@ -5,18 +5,21 @@
 struct Seg7Display
 {
     uint32_t map[8 + 4];
-    volatile GPIO* gpio;
+    GPIO gpio;
     uint32_t display[4];
     uint32_t mask;
     uint8_t current;
     int enabled;
+    uint32_t lastUpdate;
 };
+
+#define SEG7_UPDATE_DELAY_MS (0) // ~60 FPS. 
 
 extern const uint8_t SEG7_ASCII[128];
 
 uint32_t seg7_map_sym(uint8_t sym, uint8_t pos, const uint32_t map[]);
 
-void seg7_init(struct Seg7Display* display, const uint32_t map[], volatile GPIO* gpio);
+void seg7_init(struct Seg7Display* display, const uint32_t map[], GPIO gpio);
 
 void seg7_set_num(struct Seg7Display* display, uint32_t num);
 

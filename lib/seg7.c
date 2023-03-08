@@ -2,6 +2,7 @@
 #include "common.h"
 #include "stdint.h"
 #include "gpio.h"
+#include "time.h"
 
 enum Seg7Pins
 {
@@ -49,7 +50,7 @@ uint32_t seg7_map_sym(uint8_t sym, uint8_t pos, const uint32_t map[])
     return ans;
 }
 
-void seg7_init(struct Seg7Display* display, const uint32_t map[], volatile GPIO* gpio)
+void seg7_init(struct Seg7Display* display, const uint32_t map[], GPIO gpio)
 {
     display->current = 0;
     for(uint32_t i = 0; i < SIZEOF_ARR(display->map); ++i)
@@ -60,6 +61,7 @@ void seg7_init(struct Seg7Display* display, const uint32_t map[], volatile GPIO*
         GPIOx_SET_OTYPE(gpio, map[i], GPIO_OTYPE_PP);
     }
     display->gpio = gpio;
+    display->lastUpdate = millis();
 }
 
 void seg7_set_num(struct Seg7Display* seg7, uint32_t number)

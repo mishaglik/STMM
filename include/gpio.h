@@ -37,7 +37,8 @@ struct GPIO
 };
 #pragma pack(0)
 
-typedef struct GPIO GPIO;
+// typedef struct GPIO GPIO;
+typedef volatile struct GPIO* GPIO;
 
 
 /**
@@ -76,6 +77,7 @@ typedef struct GPIO GPIO;
 #define GPIOx_SET_OUT_HIGH(GPIO, PORT)      ((GPIO)->BSRR = (1U << PORT))
 #define GPIOx_SET_OUT_LOW(GPIO, PORT )      ((GPIO)->BSRR = (1U << (PORT + 16)))
 #define GPIOx_GET_INPUT(GPIO, PORT)         READ_BIT((GPIO)->IDR, PORT)
+
 
 //-------------------------------- GPIO COPYPASTE ------------------------------------------
 

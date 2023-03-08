@@ -8,15 +8,15 @@
 
 struct Button
 {
-    GPIO* gpio;
+    GPIO gpio;
     uint32_t pin;
     int32_t state;
-    void (*callback)(bool, void*);
+    void (*callback)(bool, struct Button*, void*);
     void* arg;
 };
 
-void button_init(struct Button* button, GPIO* gpio, uint32_t pin);
-void button_set_callback(struct Button* button, void (*callback)(bool, void*), void* arg);
+void button_init(struct Button* button, GPIO gpio, uint32_t pin);
+void button_set_callback(struct Button* button, void (*callback)(bool, struct Button*, void*), void* arg);
 bool button_get_value(struct Button* button);
 void button_update(struct Button* button);
 #endif /* INC_BUTTON_H */

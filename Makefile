@@ -39,9 +39,11 @@ endif
 
 SOURCES = \
 	entry.S \
-	centry.c \
-	labs/button.c\
-	labs/seg7.c\
+	lib/centry.c \
+	lib/button.c \
+	lib/seg7.c \
+	lib/time.c \
+	labs/game.c \
 	labs/reaction.c
 
 HEADERS = \
@@ -50,8 +52,9 @@ HEADERS = \
 	include/gpio.h \
 	include/rcc.h \
 
-OBJECTS_HALFWAY_DONE = $(SOURCES:labs/%.c=build/%.o)
-OBJECTS              = $(OBJECTS_HALFWAY_DONE:%.S=build/%.o)
+OBJECTS_THIRDWAY_DONE = $(SOURCES:labs/%.c=build/%.o)
+OBJECTS_HALFWAY_DONE  = $(OBJECTS_THIRDWAY_DONE:lib/%.c=build/%.o)
+OBJECTS               = $(OBJECTS_HALFWAY_DONE:%.S=build/%.o)
 
 EXECUTABLE_FLASH = build/reaction.elf
 BINARY_FLASH     = build/reaction.bin
@@ -69,6 +72,11 @@ $(BINARY_FLASH): $(EXECUTABLE_FLASH)
 	arm-none-eabi-objcopy -O binary $< $@
 
 build/%.o: labs/%.c $(HEADERS)
+	@mkdir -p build
+	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) -S -o $(@:%.o=%.s) -c $<
+
+build/%.o: lib/%.c $(HEADERS)
 	@mkdir -p build
 	$(CC) $(CFLAGS) -o $@ -c $<
 	$(CC) $(CFLAGS) -S -o $(@:%.o=%.s) -c $<
