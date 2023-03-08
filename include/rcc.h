@@ -1,0 +1,132 @@
+#ifndef BLINKLED_MEMMAP_RCC_H
+#define BLINKLED_MEMMAP_RCC_H
+
+#include "common.h"
+
+#pragma pack(1)
+struct RCC
+{
+    word CR;
+    word CFGR;
+    word CIR;
+    word APB2RSTR;
+    word APB1RSTR;
+    word AHBENR;
+    word APB2ENR;
+    word APB1ENR;
+    word BDCR;
+    word CSR;
+    word AHBRSTR;
+    word CFGR2;
+    word CFGR3;
+    word CR2;
+};
+#pragma pack(0)
+
+#define REG_RCC ((struct RCC *)(uintptr_t)(0x40021000U)) 
+
+//========< RCC CR Bit fields >===========
+
+#define RCC_CR_HSI_ON_BIT       0
+#define RCC_CR_HSI_ON           (1U << RCC_CR_HSI_ON_BIT)
+
+#define RCC_CR_HSI_READY_BIT    1
+#define RCC_CR_HSI_READY        (1U << RCC_CR_HSI_READY_BIT)
+
+#define RCC_CR_HSE_ON_BIT      16
+#define RCC_CR_HSE_ON           (1U << RCC_CR_HSE_ON_BIT)
+
+#define RCC_CR_HSE_READY_BIT   17
+#define RCC_CR_HSE_READY        (1U << RCC_CR_HSE_READY_BIT)
+
+#define RCC_CR_PLL_ON_BIT      24
+#define RCC_CR_PLL_ON           (1U << RCC_CR_PLL_ON_BIT)
+
+#define RCC_CR_PLL_READY_BIT   25
+#define RCC_CR_PLL_READY        (1U << RCC_CR_PLL_READY_BIT)
+
+//========< RCC CFGR Bit fields >===========
+
+#define RCC_CFRG_SW_HSI   0b01
+#define RCC_CFRG_SW_HSE   0b01
+#define RCC_CFRG_SW_PLL   0b10
+#define RCC_CFRG_SW_HSI48 0b11
+#define RCC_CFRG_SW_MASK  0b11
+
+
+#define RCC_CFRG_SWS_HSI   0b0100
+#define RCC_CFRG_SWS_HSE   0b0100
+#define RCC_CFRG_SWS_PLL   0b1000
+#define RCC_CFRG_SWS_HSI48 0b1100
+#define RCC_CFRG_SWS_MASK  0b1100
+
+//TODO: Fill HPRE VAL
+#define RCC_CFGR_HPRE_BIT 4
+#define RCC_CFGR_HPRE_NO_DIVIDE 0U 
+#define RCC_CFRG_HPRE_MASK  (0b111 << RCC_CFGR_HPRE_BIT)
+
+#define RCC_CFGR_PPRE_BIT 4
+#define RCC_CFRG_PPRE_NO_DIV (0b000U << RCC_CFGR_PPRE_BIT)
+#define RCC_CFRG_PPRE_DIV_2  (0b100U << RCC_CFGR_PPRE_BIT)
+#define RCC_CFRG_PPRE_DIV_4  (0b101U << RCC_CFGR_PPRE_BIT)
+#define RCC_CFRG_PPRE_DIV_8  (0b110U << RCC_CFGR_PPRE_BIT)
+#define RCC_CFRG_PPRE_DIV_16 (0b111U << RCC_CFGR_PPRE_BIT)
+#define RCC_CFRG_PPRE_MASK   (0b111U << RCC_CFGR_PPRE_BIT)
+
+#define RCC_CFRG_ADCPRE_BIT  14
+#define RCC_CFRG_ADCPRE  (1U << RCC_CFRG_ADCPRE_BIT)
+
+
+#define RCC_CFGR_PLLSRC_BIT 15
+#define RCC_CFGR_PLLSRC_HSI_2        (0b00u << RCC_CFGR_PLLSRC_BIT)
+#define RCC_CFGR_PLLSRC_HSI_PREDIV   (0b01u << RCC_CFGR_PLLSRC_BIT)
+#define RCC_CFGR_PLLSRC_HSE_PREDIV   (0b10u << RCC_CFGR_PLLSRC_BIT)
+#define RCC_CFGR_PLLSRC_HSI48_PREDIV (0b11u << RCC_CFGR_PLLSRC_BIT)
+#define RCC_CFGR_PLLSRC_MASK         (0b11u << RCC_CFGR_PLLSRC_BIT)
+
+#define RCC_CFRG_PLLXTPRE_BIT 17
+#define RCC_CFRG_PLLXTPRE    (1U << RCC_CFRG_PLLXTPRE_BIT)
+
+#define RCC_CFGR_PLLMUL_BIT 18
+#define RCC_CFGR_PLLMUL_VAL(x) (((x) - 2U) << RCC_CFGR_PLLMUL_BIT) 
+#define RCC_CFGR_PLLMUL_MASK (0b1111 << RCC_CFGR_PLLMUL_BIT)
+
+
+//========< RCC AHBEN Bit fields >===========   
+
+#define RCC_AHBENR_DMAEN_BIT   0
+#define RCC_AHBENR_DMA2EN_BIT  1
+#define RCC_AHBENR_SRAMEN_BIT  2
+//      RCC_AHBENR_RESERVED    3
+#define RCC_AHBENR_FLITEN_BIT  4
+//      RCC_AHBENR_RESERVED    5
+#define RCC_AHBENR_CRCEN_BIT   6
+//      RCC_AHBENR_RESERVED    7
+//                             :
+//      RCC_AHBENR_RESERVED   16
+#define RCC_AHBENR_IOPAEN_BIT 17
+#define RCC_AHBENR_IOPBEN_BIT 18
+#define RCC_AHBENR_IOPCEN_BIT 19
+#define RCC_AHBENR_IOPDEN_BIT 20
+#define RCC_AHBENR_IOPEEN_BIT 21
+#define RCC_AHBENR_IOPFEN_BIT 22
+//      RCC_AHBENR_RESERVED   23
+#define RCC_AHBENR_TSCEN_BIT  24
+
+#define RCC_AHBENR_DMAEN  (1U << RCC_AHBENR_DMAEN_BIT )
+#define RCC_AHBENR_DMA2EN (1U << RCC_AHBENR_DMA2EN_BIT)
+#define RCC_AHBENR_SRAMEN (1U << RCC_AHBENR_SRAMEN_BIT)
+#define RCC_AHBENR_FLITEN (1U << RCC_AHBENR_FLITEN_BIT)
+#define RCC_AHBENR_CRCEN  (1U << RCC_AHBENR_CRCEN_BIT )
+#define RCC_AHBENR_IOPAEN (1U << RCC_AHBENR_IOPAEN_BIT)
+#define RCC_AHBENR_IOPBEN (1U << RCC_AHBENR_IOPBEN_BIT)
+#define RCC_AHBENR_IOPCEN (1U << RCC_AHBENR_IOPCEN_BIT)
+#define RCC_AHBENR_IOPDEN (1U << RCC_AHBENR_IOPDEN_BIT)
+#define RCC_AHBENR_IOPEEN (1U << RCC_AHBENR_IOPEEN_BIT)
+#define RCC_AHBENR_IOPFEN (1U << RCC_AHBENR_IOPFEN_BIT)
+#define RCC_AHBENR_TSCEN  (1U << RCC_AHBENR_TSCEN_BIT )
+
+//========< RCC CFGR2 Bit fields >===========
+
+#define RCC_CFGR2_PREDIV_MASK 0b1111U
+#endif /* 01_BLINKLED_MEMMAP_RCC_H */
