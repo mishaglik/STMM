@@ -29,7 +29,7 @@ void seg7_set_num_dn(struct Seg7Display* display, uint32_t num);
 
 void seg7_set_dot(struct Seg7Display* display, uint16_t dot);
 
-void seg7_set_str(struct Seg7Display* display, char str[4]);
+void seg7_set_str(struct Seg7Display* display, const char str[4]);
 
 void seg7_fill(struct Seg7Display* display, uint8_t seg7_value);
 

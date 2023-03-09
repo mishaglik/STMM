@@ -74,9 +74,9 @@ typedef volatile struct GPIO* GPIO;
 #define GPIOx_SET_OSPEED(GPIO, PORT, SPEED) MODIFY_REG((GPIO)->OSPEEDR, (0b11) << 2*(PORT), (SPEED) << 2*(PORT))
 #define GPIOx_SET_PUPD(GPIO, PORT, PUPD)    MODIFY_REG((GPIO)->PUPDR, (0b11) << 2*(PORT), (PUPD)  << 2*(PORT))
 #define GPIOx_SET_OUTPUT(GPIO, PORT, VALUE) ((GPIO)->BSRR |= ((VALUE) ? 1 : 0x10000U) << PORT)
-#define GPIOx_SET_OUT_HIGH(GPIO, PORT)      ((GPIO)->BSRR = (1U << PORT))
-#define GPIOx_SET_OUT_LOW(GPIO, PORT )      ((GPIO)->BSRR = (1U << (PORT + 16)))
-#define GPIOx_GET_INPUT(GPIO, PORT)         READ_BIT((GPIO)->IDR, PORT)
+#define GPIOx_SET_OUT_HIGH(GPIO, PORT)      ((GPIO)->BSRR = (1U << (PORT)))
+#define GPIOx_SET_OUT_LOW(GPIO, PORT )      ((GPIO)->BSRR = (1U << ((PORT) + 16)))
+#define GPIOx_GET_INPUT(GPIO, PORT)         READ_BIT((GPIO)->IDR, (PORT))
 
 
 //-------------------------------- GPIO COPYPASTE ------------------------------------------

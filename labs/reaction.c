@@ -12,10 +12,10 @@
 
 const uint32_t Seg7Map[] =
 {
-    IO11, IO7 , IO4, IO2,
-    IO1 , IO10, IO5, IO3,
-    IO6 , IO8 , IO9, IO12,
-    IO14, IO0, IO15
+    IO11, IO7 , IO4 , IO2,
+    IO1 , IO10, IO5 , IO3,
+    IO6 , IO8 , IO9 , IO12,
+    IO13, IO14, IO15, IO0
 };
 
 void board_gpio_init()
@@ -42,6 +42,8 @@ int main()
 {
     board_gpio_init();
     struct Game game;
+    GPIOx_SET_PUPD(GPIOA, IO13, GPIO_PUPD_PULLDOWN);
+    GPIOx_SET_PUPD(GPIOA, IO14, GPIO_PUPD_PULLDOWN);
     game_init(&game, Seg7Map, GPIOA);
 
     while(1)

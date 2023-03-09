@@ -91,18 +91,19 @@ void seg7_set_dot(struct Seg7Display* seg7, uint16_t dot)
     {
         seg7->display[i] &= ~seg7->map[DP];
     }
-    seg7->display[dot] |= seg7->map[DP];
+    if(dot < 4)
+        seg7->display[dot] |= seg7->map[DP];
 }
 
-void seg7_set_str(struct Seg7Display* seg7, char str[4])
+void seg7_set_str(struct Seg7Display* seg7, const char str[4])
 {
     for(uint32_t i = 0; i < 4; ++i)
     {
-        seg7->display[i] = seg7_map_sym(SEG7_ASCII[str[i]], 3 - i, seg7->map);
+        seg7->display[3 - i] = seg7_map_sym(SEG7_ASCII[str[i]], 3 - i, seg7->map);
         if(!str[i])
         {
             for(; i < 4; ++i)
-                seg7->display[i] = 0;
+                seg7->display[3 - i] = 0;
             return; 
         }
     }
