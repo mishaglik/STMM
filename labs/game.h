@@ -35,6 +35,10 @@ struct GameScoresData
 {
     struct GameFightData fd;
     uint32_t loop;
+    uint32_t led1upd;
+    uint32_t led2upd;
+    uint32_t led1state;
+    uint32_t led2state;
 };
 
 struct GameFinaleData

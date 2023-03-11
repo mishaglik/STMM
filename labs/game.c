@@ -9,7 +9,10 @@
 #define GAME_GREETING_TEXT "HELLO, GAMERS! Press any button to START. HELL"
 #define GAME_FIGHT_PRE_MS 10000
 
-#define GAME_PLAY_UNTILL 1
+#define GAME_SCORES_WINNER_DELAY_MS 500
+#define GAME_SCORES_LOSER_DELAY_MS 1000
+
+#define GAME_PLAY_UNTILL 2
 
 struct TimedText
 {
@@ -43,15 +46,15 @@ static const struct TimedText GAME_RSD_TTEXT[] =
 
 static void game_greeting_init   (struct Game* game);
 static void game_greetings_update(struct Game* game);
-static void game_rsg_init   (struct Game* game);
-static void game_rsg_update (struct Game* game);
-static void game_fight_init   (struct Game* game);
-static void game_fight_update (struct Game* game);
-static void game_scores_init   (struct Game* game);
-static void game_scores_update (struct Game* game);
-static void game_looper_init   (struct Game* game);
-static void game_looper_update (struct Game* game);
-static void game_display_time   (struct Game* game);
+static void game_rsg_init        (struct Game* game);
+static void game_rsg_update      (struct Game* game);
+static void game_fight_init      (struct Game* game);
+static void game_fight_update    (struct Game* game);
+static void game_scores_init     (struct Game* game);
+static void game_scores_update   (struct Game* game);
+static void game_looper_init     (struct Game* game);
+static void game_looper_update   (struct Game* game);
+static void game_display_time    (struct Game* game);
 
 static void game_button_handler(bool state, struct Button* button, void* data);
 
@@ -83,6 +86,13 @@ void game_init(struct Game* game, const uint32_t pin_map[], GPIO gpio)
     game->led_pin = pin_map[14];
     GPIOx_SET_MODE (gpio, game->led_pin, GPIO_MODE_OUTPUT);
     GPIOx_SET_OTYPE(gpio, game->led_pin, GPIO_OTYPE_PP);
+    GPIOx_SET_PUPD (gpio, game->led_pin, GPIO_PUPD_NONE);
+
+    GPIOx_SET_MODE (GPIOC, IO8, GPIO_MODE_OUTPUT);
+    GPIOx_SET_OTYPE(GPIOC, IO8, GPIO_OTYPE_PP);
+
+    GPIOx_SET_MODE (GPIOC, IO9, GPIO_MODE_OUTPUT);
+    GPIOx_SET_OTYPE(GPIOC, IO9, GPIO_OTYPE_PP);
 
     game->phase = 0;
     game->gpio = gpio;
@@ -217,6 +227,8 @@ static void game_scores_init   (struct Game* game)
     GPIOx_SET_OUT_LOW(game->gpio, game->led_pin);
     game_show_score(game);
     game->scoresData.loop = 0;
+    game->scoresData.led1state = game->scoresData.led2state = 0;
+    game->scoresData.led1upd = game->scoresData.led2upd = millis();
 }
 
 static void game_scores_update (struct Game* game)
@@ -235,11 +247,27 @@ static void game_scores_update (struct Game* game)
 
         if(game->scoresData.loop == GAME_SCORES_LOOPS)
         {
+            GPIOx_SET_OUT_LOW(GPIOC, IO8);
+            GPIOx_SET_OUT_LOW(GPIOC, IO9);
             game->phase++;
             PhaseInfo[game->phase].init(game);
         }
 
         game->last_update = millis();
+    }
+
+    if(millis() - game->scoresData.led1upd > (game->scoresData.fd.winner ? GAME_SCORES_WINNER_DELAY_MS : GAME_SCORES_LOSER_DELAY_MS))
+    {
+        game->scoresData.led1state ^= 1;
+        GPIOx_SET_OUTPUT(GPIOC, IO8, game->scoresData.led1state);
+        game->scoresData.led1upd = millis();
+    }
+
+    if(millis() - game->scoresData.led2upd > (!game->scoresData.fd.winner ? GAME_SCORES_WINNER_DELAY_MS : GAME_SCORES_LOSER_DELAY_MS))
+    {
+        game->scoresData.led2state ^= 1;
+        GPIOx_SET_OUTPUT(GPIOC, IO9, game->scoresData.led2state);
+        game->scoresData.led2upd = millis();
     }
 }
 
